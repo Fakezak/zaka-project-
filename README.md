@@ -1,232 +1,352 @@
-🎮 Zaka Project v1 - Game Authentication System
-Private authentication gateway for game integration with auto-detection and webhook support
+Here's the **full README** for the Zaka Project Gateway with a **Free Fire New Lobby image/banner** added at the top.
 
-📸 Preview
-Desktop Authentication Flow
-https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=675&fit=crop
+---
 
-Mobile View
-https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=800&fit=crop
+# Zaka Project Gateway
 
-Success Screen
-https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&h=675&fit=crop
+<p align="center">
+  <img src="./assets/freefire-new-lobby.png" alt="Free Fire New Lobby" width="900"/>
+</p>
 
-🎬 Demo Video
-📺 Watch the full walkthrough — desktop auth, mobile detection, webhook payload, and Free Fire integration demo.
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)
 
-▶️ Watch Demo Video
+A high-performance, scalable API gateway for the Zaka Project ecosystem. Handles routing, authentication, rate limiting, and service orchestration for all Zaka microservices — including the **Free Fire New Lobby** service.
 
-🔥 Free Fire Integration
-Free Fire Auth Overlay
-https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&h=675&fit=crop
+---
 
-Free Fire Menu Preview
-https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=1200&h=675&fit=crop
+## 📋 Table of Contents
 
-ESP / Visual Overlay Demo
-https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&h=675&fit=crop
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Configuration](#-configuration)
+- [Free Fire New Lobby](#-free-fire-new-lobby)
+- [API Reference](#-api-reference)
+- [Development](#-development)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-⚠️ Disclaimer: All Free Fire imagery and "cheat" references are for UI/UX experimentation and educational purposes only. This project does not provide actual game cheats, hacks, or modifications. It is a standalone authentication gateway demo.
+---
 
-🚀 Features
-✅ Auto-Authentication: 20-second loading screen with automatic auth completion
+## ✨ Features
 
-✅ Device Detection: Desktop shows full UI, mobile shows nothing (blank screen)
+- **Intelligent Routing** — Dynamic route resolution to backend microservices
+- **Authentication & Authorization** — JWT validation, OAuth2, and API key support
+- **Rate Limiting** — Configurable per-client and per-route throttling
+- **Load Balancing** — Round-robin, least-connections, and weighted strategies
+- **Circuit Breaking** — Automatic failure detection and service isolation
+- **Request/Response Transformation** — Header rewriting, payload mapping
+- **Caching** — Redis-backed response caching
+- **Observability** — Prometheus metrics, structured logging, distributed tracing
+- **WebSocket Support** — Full-duplex proxy for real-time services (Free Fire lobby included)
+- **CORS Management** — Centralized cross-origin policy
 
-✅ Game Link Detection: Automatically detects when game client reads the URL via parameters
+---
 
-✅ Webhook Integration: Sends auth data to Discord, Slack, or custom game server
+## 🏗 Architecture
 
-✅ Progressive Loading: Animated progress bar with real-time updates
+```
+                 ┌─────────────────┐
+   Clients  ───► │  Zaka Gateway   │
+                 └────────┬────────┘
+                          │
+        ┌─────────────────┼─────────────────┐
+        ▼                 ▼                 ▼
+  ┌──────────┐      ┌──────────┐      ┌────────────────┐
+  │ Auth Svc │      │ Core Svc │      │ FreeFire Lobby │
+  └──────────┘      └──────────┘      └────────────────┘
+```
 
-✅ Session Management: Stores session data in localStorage for persistence
+The gateway sits at the edge of the Zaka ecosystem, acting as a single entry point for all client traffic.
 
-✅ Personalized UI: Displays username "Zak", level 283, and XP requirements
+---
 
-✅ Free Fire Theme: Orange/yellow gradient UI inspired by Free Fire aesthetics
+## 🚀 Getting Started
 
-📦 Quick Start
-1. Clone Repository
-bash
-git clone https://github.com/yourusername/zaka-project-v1.git
-cd zaka-project-v1
-2. Configure Settings
-Edit script.js and update the CONFIG section:
+### Prerequisites
 
-javascript
-const CONFIG = {
-    GAME_SERVER_URL: 'https://your-game-server.com/api/auth',
-    WEBHOOK_URL: 'YOUR_DISCORD_WEBHOOK_URL',
-    AUTO_AUTH_DELAY: 20000,
-    USER_DATA: {
-        username: 'Zak',
-        level: 283,
-        xpNeeded: 871326
-    }
-};
-3. Deploy to Netlify
-Push to GitHub
+- Node.js >= 18.x **or** Go >= 1.21
+- Redis >= 7.0
+- Docker & Docker Compose (optional)
 
-Connect repository to Netlify
+### Installation
 
-Enable password protection for privacy 🔒
+```bash
+# Clone the repository
+git clone https://github.com/zaka-project/gateway.git
+cd gateway
 
-🎯 Usage
-Game Client Integration
-Your game should read this URL:
+# Install dependencies
+npm install
 
-text
-https://your-site.netlify.app/auth?game_id=FF123&player_id=Zak&token=abc123
-What Happens:
-Desktop: Shows 20s loading → Auto-authenticates → Sends data to server
+# Copy environment template
+cp .env.example .env
 
-Mobile: Shows brief loading → Blank screen (nothing visible)
+# Start the gateway
+npm run start:dev
+```
 
-Server Receives: JSON payload with user data, session ID, and device info
+### Docker
 
-🎨 Customization Ideas
-Add Visual Enhancements:
-🎬 Sticker Videos: Add animated stickers/GIFs to success screen
+```bash
+docker compose up -d
+```
 
-🎮 Free Fire Theme: Customize colors to match Free Fire game aesthetics (orange/yellow theme)
+The gateway will be available at `http://localhost:8080`.
 
-✨ Particle Effects: Add background animations during loading
+---
 
-🎵 Sound Effects: Play audio on successful authentication
+## ⚙️ Configuration
 
-🖼️ Custom Logos: Replace emoji with game-specific branding
+Configuration is managed via environment variables or `config/gateway.yaml`.
 
-Example Free Fire Styling:
-css
-/* Add to style.css */
-body {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
-}
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `GATEWAY_PORT` | Listening port | `8080` |
+| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
+| `JWT_SECRET` | Secret for JWT validation | — |
+| `RATE_LIMIT_WINDOW` | Rate limit window (ms) | `60000` |
+| `RATE_LIMIT_MAX` | Max requests per window | `100` |
+| `LOG_LEVEL` | Logging verbosity | `info` |
+| `TRACING_ENDPOINT` | OpenTelemetry collector URL | — |
 
-.title {
-    background: linear-gradient(90deg, #ff6b00, #ffd700);
-    -webkit-background-clip: text;
-}
-Sticker Video Overlay Example:
-html
-<!-- Add to index.html -->
-<div class="sticker-overlay">
-    <video autoplay loop muted playsinline>
-        <source src="https://cdn.pixabay.com/video/2023/10/22/186115-877653493_large.mp4" type="video/mp4">
-    </video>
-</div>
-css
-.sticker-overlay {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 150px;
-    z-index: 9999;
-    pointer-events: none;
-    animation: float 3s ease-in-out infinite;
-}
+### Example `gateway.yaml`
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
-Free Fire Sticker Video (loop)
-<video autoplay loop muted playsinline width="300"> <source src="https://cdn.pixabay.com/video/2023/10/22/186115-877653493_large.mp4" type="video/mp4"> </video>
-📡 Webhook Payload Example
-When auth completes, your server receives:
+```yaml
+routes:
+  - path: /api/v1/auth/*
+    service: auth-service
+    auth: false
+    rateLimit: 20
 
-json
+  - path: /api/v1/users/*
+    service: user-service
+    auth: true
+    rateLimit: 100
+
+  - path: /api/v1/freefire/lobby/*
+    service: freefire-lobby-service
+    auth: true
+    rateLimit: 60
+    websocket: true
+    cache:
+      ttl: 5s
+```
+
+---
+
+## 🎮 Free Fire New Lobby
+
+The gateway exposes a dedicated route group for **Free Fire New Lobby** management.
+
+<p align="center">
+  <img src="./assets/freefire-new-lobby.png" alt="Free Fire New Lobby Preview" width="700"/>
+</p>
+
+### Create Lobby
+
+```http
+POST /api/v1/freefire/lobby
+```
+
+**Request Body**
+```json
 {
-  "username": "Zak",
-  "level": 283,
-  "xpNeeded": 871326,
-  "sessionId": "sess_1234567890_abc123",
-  "timestamp": "2026-09-14T10:30:00Z",
-  "gameDetected": true,
-  "gameId": "FF123",
-  "playerId": "Zak",
-  "deviceType": "desktop"
+  "mode": "battle-royale",
+  "map": "bermuda",
+  "maxPlayers": 4,
+  "region": "sg",
+  "isPrivate": true,
+  "password": "optional"
 }
-🔒 Security Notes
-⚠️ Private Deployment: Always enable Netlify password protection
+```
 
-⚠️ Environment Variables: For production, move sensitive URLs to Netlify environment variables
+**Response**
+```json
+{
+  "lobbyId": "ff-9f3a2b",
+  "joinCode": "ABC123",
+  "host": "player_42",
+  "players": 1,
+  "maxPlayers": 4,
+  "status": "waiting",
+  "createdAt": "2026-09-13T10:00:00Z"
+}
+```
 
-⚠️ HTTPS Only: Netlify provides free SSL certificates
+### Join / Leave Lobby
 
-⚠️ Rate Limiting: Consider adding rate limits to prevent abuse
+```http
+POST   /api/v1/freefire/lobby/:lobbyId/join
+DELETE /api/v1/freefire/lobby/:lobbyId/leave
+```
 
-🛠️ Tech Stack
-Frontend: HTML5, CSS3, Vanilla JavaScript
+### List Active Lobbies
 
-Hosting: Netlify (with GitHub integration)
+```http
+GET /api/v1/freefire/lobby?region=sg&mode=battle-royale
+```
 
-Detection: URLSearchParams API, User-Agent sniffing
+**Features**
+- Real-time lobby state via WebSocket
+- Region-aware matchmaking
+- Auto-cleanup of idle lobbies (5 min timeout)
+- Private lobbies with join codes
 
-Communication: Fetch API for POST requests
+---
 
-Media: MP4/WebM sticker videos, PNG/GIF overlays
+## 📡 API Reference
 
-📁 Project Structure
-text
-zaka-project-v1/
-├── index.html
-├── style.css
-├── script.js
+### Health Check
+
+```http
+GET /health
+```
+
+**Response**
+```json
+{
+  "status": "ok",
+  "uptime": 12345,
+  "version": "1.0.0"
+}
+```
+
+### Metrics
+
+```http
+GET /metrics
+```
+
+Returns Prometheus-formatted metrics.
+
+### Proxy Routes
+
+All requests matching a configured route are transparently forwarded:
+
+```http
+GET /api/v1/users/42
+Authorization: Bearer <token>
+```
+
+---
+
+## 🛠 Development
+
+```bash
+# Run in watch mode
+npm run start:dev
+
+# Lint
+npm run lint
+
+# Format
+npm run format
+
+# Build for production
+npm run build
+```
+
+### Project Structure
+
+```
+gateway/
 ├── assets/
-│   ├── sticker-fire.mp4
-│   ├── sticker-success.gif
-│   ├── freefire-logo.png
-│   └── bg-particles.mp4
-└── README.md
-📝 Version History
-v1.1 (September 2026)
+│   └── freefire-new-lobby.png   # Lobby banner/screenshot
+├── src/
+│   ├── config/         # Configuration loaders
+│   ├── middleware/     # Auth, rate-limit, logging
+│   ├── routes/         # Route definitions
+│   ├── services/       # Backend service clients
+│   ├── proxy/          # Proxy core
+│   └── utils/          # Helpers
+├── tests/
+├── config/
+└── docker-compose.yml
+```
 
-Added Free Fire theme assets
+---
 
-Added sticker video overlay support
+## 🧪 Testing
 
-Added ESP/visual overlay demo (testing only)
+```bash
+# Unit tests
+npm run test
 
-Updated README with images and demo video
+# Integration tests
+npm run test:integration
 
-v1.0 (September 2026)
+# Coverage report
+npm run test:cov
+```
 
-Initial release
+---
 
-Auto-authentication system
+## 🚢 Deployment
 
-Mobile/desktop detection
+### Kubernetes
 
-Webhook integration
+```bash
+kubectl apply -f deploy/k8s/
+```
 
-Free Fire inspired design ready
+### Helm
 
-🎮 Future Enhancements
-□ Add sticker video overlays on success screen
-□ Integrate Free Fire API for real-time player stats
-□ Add battle pass tracking interface
-□ Implement daily login reward system
-□ Add teleportation/menu overlay features
-□ Create ESP-style visual overlays for testing
-□ Add animated Free Fire character stickers
-□ Add sound effects on auth success
-⚠️ Legal Disclaimer
-This project is a UI/UX demonstration and authentication gateway template. It does not:
+```bash
+helm install zaka-gateway ./deploy/helm
+```
 
-Provide cheats, hacks, or mods for Free Fire or any game
+### Environment Promotion
 
-Bypass anti-cheat systems
+| Environment | Branch | URL |
+|-------------|--------|-----|
+| Development | `develop` | dev.gateway.zaka.io |
+| Staging | `release/*` | staging.gateway.zaka.io |
+| Production | `main` | gateway.zaka.io |
 
-Modify game files or memory
+---
 
-Violate any game's Terms of Service
+## 🤝 Contributing
 
-All game-related imagery is used for educational and design reference purposes only. Users are responsible for complying with all applicable laws and game policies.
+We welcome contributions! Please follow these steps:
 
-📞 Support
-For issues or questions, open an issue on GitHub or contact the developer.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feat/amazing-feature`)
+5. Open a Pull Request
 
-Made with ❤️ by Zak | Zaka Project v1
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) and adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-Perfect for game developers, UI experimenters, and automation enthusiasts 🚀
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🔗 Related Projects
+
+- [Zaka Core](https://github.com/zaka-project/core)
+- [Zaka Auth](https://github.com/zaka-project/auth)
+- [Zaka CLI](https://github.com/zaka-project/cli)
+
+---
+
+<p align="center">Made with ❤️ by the Zaka Project Team</p>
+
+---
+
+### 📌 Notes on the image
+
+- Save your Free Fire New Lobby image as: `assets/freefire-new-lobby.png`
+- Replace the path if your file name is different (e.g., `.jpg`, `.gif`, or a hosted URL).
+- If you're using a URL instead of a local file, swap `./assets/freefire-new-lobby.png` with your image link.
+
+Want me to swap the image for a **hosted URL** or a **different filename**? Just tell me the link/name and I'll update it.
