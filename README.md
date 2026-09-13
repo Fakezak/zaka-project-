@@ -7,34 +7,34 @@
 ## 📸 Preview
 
 ### Desktop Authentication Flow
-![Zaka Auth Desktop](https://via.placeholder.com/800x450/ff6b00/ffffff?text=Zaka+Project+v1+-+Desktop+Auth+UI)
+![Zaka Auth Desktop](screenshots/desktop-auth.png)
 
 ### Mobile View
-![Zaka Mobile](https://via.placeholder.com/400x800/1a1a1a/ffffff?text=Mobile+-+Blank+Screen)
+![Zaka Mobile](screenshots/mobile-blank.png)
 
 ### Success Screen
-![Zaka Success](https://via.placeholder.com/800x450/ffd700/000000?text=Authentication+Success)
+![Zaka Success](screenshots/success-screen.png)
 
 ---
 
 ## 🎬 Demo Video
 
-[![Zaka Project Demo](https://via.placeholder.com/800x450/ff6b00/ffffff?text=▶+Watch+Demo+Video)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+📺 **Watch the full walkthrough** — desktop auth, mobile detection, webhook payload, and Free Fire integration demo.
 
-> 📺 **Watch the full walkthrough** — desktop auth, mobile detection, webhook payload, and Free Fire integration demo.
+▶️ **[Download Demo Video](assets/demo.mp4)**
 
 ---
 
 ## 🔥 Free Fire Integration
 
 ### Free Fire Auth Overlay
-![Free Fire Auth](https://via.placeholder.com/800x450/ff9500/ffffff?text=Free+Fire+Auth+Overlay)
+![Free Fire Auth](screenshots/freefire-auth.png)
 
 ### Free Fire Menu Preview
-![Free Fire Menu](https://via.placeholder.com/800x450/ff6b00/ffffff?text=Free+Fire+Menu+UI)
+![Free Fire Menu](screenshots/freefire-menu.png)
 
 ### ESP / Visual Overlay Demo
-![ESP Overlay](https://via.placeholder.com/800x450/000000/00ff00?text=ESP+Visual+Overlay+%28Testing%29)
+![ESP Overlay](screenshots/esp-overlay.png)
 
 > ⚠️ **Disclaimer**: All Free Fire imagery and "cheat" references are for **UI/UX experimentation and educational purposes only**. This project does **not** provide actual game cheats, hacks, or modifications. It is a standalone authentication gateway demo.
 
@@ -195,6 +195,7 @@ zaka-project-v1/
 ├── style.css
 ├── script.js
 ├── assets/
+│   ├── demo.mp4
 │   ├── sticker-fire.mp4
 │   ├── sticker-success.gif
 │   ├── freefire-logo.png
@@ -203,7 +204,9 @@ zaka-project-v1/
 │   ├── desktop-auth.png
 │   ├── mobile-blank.png
 │   ├── success-screen.png
-│   └── freefire-menu.png
+│   ├── freefire-auth.png
+│   ├── freefire-menu.png
+│   └── esp-overlay.png
 └── README.md
 ```
 
