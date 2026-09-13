@@ -1,24 +1,24 @@
-// Configuration - UPDATE THESE WITH YOUR SERVER DETAILS
+/**
+ * Zaka Project v1 - Auth System
+ * This script handles device detection, loading simulation, 
+ * and local authentication data generation.
+ */
+
+// Configuration
 const CONFIG = {
-    // Your game server endpoint to send auth data
-    GAME_SERVER_URL: 'https://your-game-server.com/api/auth',
-    
-    // Or use a webhook service like Discord, Slack, or custom endpoint
-    WEBHOOK_URL: 'https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN',
-    
     // Auto-auth delay in milliseconds (20 seconds)
     AUTO_AUTH_DELAY: 20000,
     
-    // User credentials (in production, these should come from secure storage)
+    // User Profile Data
     USER_DATA: {
         username: 'Zak',
         level: 283,
         xpNeeded: 871326,
-        sessionId: generateSessionId()
+        status: 'Active'
     }
 };
 
-// Generate unique session ID
+// Generate unique session ID for this login instance
 function generateSessionId() {
     return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -29,71 +29,13 @@ function isMobile() {
            || window.innerWidth <= 768;
 }
 
-// Check URL parameters for game detection
+// Check URL parameters (e.g., ?game_id=FF123)
 function detectGameAccess() {
     const urlParams = new URLSearchParams(window.location.search);
-    const gameId = urlParams.get('game_id');
-    const playerId = urlParams.get('player_id');
-    const authToken = urlParams.get('token');
-    
     return {
-        detected: gameId || playerId || authToken,
-        gameId: gameId,
-        playerId: playerId,
-        authToken: authToken
+        detected: urlParams.toString().length > 0,
+        params: Object.fromEntries(urlParams.entries())
     };
-}
-
-// Send authentication data to game server
-async function sendAuthData(authData) {
-    try {
-        console.log('Sending auth data to server:', authData);
-        
-        // Option 1: Send to your game server
-        const response = await fetch(CONFIG.GAME_SERVER_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(authData)
-        });
-        
-        if (response.ok) {
-            console.log('Auth data sent successfully');
-            return true;
-        }
-    } catch (error) {
-        console.error('Error sending to game server:', error);
-    }
-    
-    // Option 2: Send to webhook (Discord/Slack/etc)
-    try {
-        await fetch(CONFIG.WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                content: `🎮 New Auth Request\nUser: ${authData.username}\nSession: ${authData.sessionId}\nLevel: ${authData.level}`,
-                embeds: [{
-                    title: 'Authentication Data',
-                    color: 0x00d4ff,
-                    fields: [
-                        { name: 'Username', value: authData.username, inline: true },
-                        { name: 'Level', value: authData.level.toString(), inline: true },
-                        { name: 'XP Needed', value: authData.xpNeeded.toLocaleString(), inline: true },
-                        { name: 'Session ID', value: authData.sessionId },
-                        { name: 'Timestamp', value: new Date().toISOString() }
-                    ]
-                }]
-            })
-        });
-        console.log('Webhook sent successfully');
-    } catch (error) {
-        console.error('Error sending webhook:', error);
-    }
-    
-    return false;
 }
 
 // Elements
@@ -108,7 +50,7 @@ function updateProgress(startTime, duration) {
     const interval = setInterval(() => {
         const elapsed = Date.now() - startTime;
         const progress = Math.min((elapsed / duration) * 100, 100);
-        progressBar.style.width = progress + '%';
+        if (progressBar) progressBar.style.width = progress + '%';
         
         if (progress >= 100) {
             clearInterval(interval);
@@ -116,79 +58,60 @@ function updateProgress(startTime, duration) {
     }, 100);
 }
 
-// Auto-authenticate function
-async function autoAuthenticate() {
+// Main Authentication Logic
+function performAuth() {
     const gameDetection = detectGameAccess();
     
-    // Prepare auth data
-    const authData = {
-        username: CONFIG.USER_DATA.username,
-        level: CONFIG.USER_DATA.level,
-        xpNeeded: CONFIG.USER_DATA.xpNeeded,
-        sessionId: CONFIG.USER_DATA.sessionId,
+    // Create the Auth Data Packet (This acts as the "Server Response")
+    const authPacket = {
+        status: 'SUCCESS',
         timestamp: new Date().toISOString(),
-        gameDetected: gameDetection.detected,
-        gameId: gameDetection.gameId,
-        playerId: gameDetection.playerId,
-        deviceType: isMobile() ? 'mobile' : 'desktop',
-        userAgent: navigator.userAgent
+        user: CONFIG.USER_DATA,
+        session: generateSessionId(),
+        device: isMobile() ? 'mobile' : 'desktop',
+        source: gameDetection.detected ? gameDetection.params : 'direct_access'
     };
+
+    // Log to Console (Acting as the server log)
+    console.log('✅ AUTHENTICATION SUCCESSFUL');
+    console.log('📦 Data Packet:', authPacket);
+
+    // Update UI to show success
+    if (loadingScreen) loadingScreen.classList.add('hidden');
+    if (successMessage) successMessage.classList.remove('hidden');
     
-    // Send auth data to server
-    await sendAuthData(authData);
-    
-    // Show success message
-    loadingScreen.classList.add('hidden');
-    successMessage.classList.remove('hidden');
-    
-    // Store session in localStorage
-    localStorage.setItem('game_session', JSON.stringify(authData));
-    
-    console.log('Auto-authentication complete:', authData);
+    // Store session locally
+    localStorage.setItem('zaka_auth_session', JSON.stringify(authPacket));
 }
 
-// Initialize based on device
+// Initialize on Load
 window.addEventListener('load', () => {
     const startTime = Date.now();
-    
+
     if (isMobile()) {
-        // On mobile: show nothing after brief loading
+        // Mobile: Show nothing after brief load
         setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-            }, 500);
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => loadingScreen.classList.add('hidden'), 500);
+            }
         }, 2000);
     } else {
-        // On desktop: show loading for 20 seconds, then auto-auth
-        updateProgress(startTime, CONFIG.AUTO_AUTH_DELAY);
+        // Desktop: 20s Loading -> Auto Success
+        if (progressBar) updateProgress(startTime, CONFIG.AUTO_AUTH_DELAY);
         
         setTimeout(() => {
-            autoAuthenticate();
+            performAuth();
         }, CONFIG.AUTO_AUTH_DELAY);
     }
 });
 
-// Handle manual login form submission (fallback)
+// Manual Login Fallback
 if (authForm) {
-    authForm.addEventListener('submit', async (e) => {
+    authForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        // Update config with user input
-        CONFIG.USER_DATA.username = username;
-        
-        // Trigger auto-auth
-        await autoAuthenticate();
+        // Skip waiting and auth immediately
+        if (loadingScreen) loadingScreen.classList.add('hidden');
+        performAuth();
     });
 }
-
-// Check for existing session
-document.addEventListener('DOMContentLoaded', () => {
-    const existingSession = localStorage.getItem('game_session');
-    if (existingSession) {
-        console.log('Existing session found:', JSON.parse(existingSession));
-    }
-});
