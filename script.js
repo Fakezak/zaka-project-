@@ -7,7 +7,7 @@
 // Configuration
 const CONFIG = {
     // Auto-auth delay in milliseconds (20 seconds)
-    AUTO_AUTH_DELAY: 20000,
+    AUTO_AUTH_DELAY: 10000,
     
     // User Profile Data
     USER_DATA: {
